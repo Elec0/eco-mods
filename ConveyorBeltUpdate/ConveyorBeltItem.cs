@@ -13,7 +13,7 @@ using Eco.Shared.Serialization;
 
 [Serialized]
 [LocDisplayName("Conveyor Belt")]
-[Weight(0)]
+[Weight(100)]
 public partial class ConveyorBeltItem : WorldObjectItem<ConveyorBeltObject>
 {
     public override LocString DisplayDescription { get { return Localizer.DoStr("Convey things with belts"); } }
@@ -26,23 +26,25 @@ public partial class ConveyorBeltItem : WorldObjectItem<ConveyorBeltObject>
     {
         public ConveyorBeltRecipe()
         {
-            this.Initialize(Localizer.DoStr("Conveyor Belt"), typeof(ConveyorBeltRecipe));
             this.Recipes = new List<Recipe>
             {
-                new Recipe("ConveyorBelt",
+                new Recipe(
+                        "ConveyorBelt",
                         Localizer.DoStr("Conveyor Belt"),
                         new IngredientElement[]
                         {
                             new IngredientElement(typeof(IronGearItem), 1, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
                             new IngredientElement(typeof(CorrugatedSteelItem), 1, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
                         },
-                        new CraftingElement<ConveyorBeltItem>()
-                        )
+                        new CraftingElement[] { new CraftingElement<ConveyorBeltItem>() }
+                    )
             };
 
             this.ExperienceOnCraft = 5;
-            this.CraftMinutes = CreateCraftTimeValue(typeof(ConveyorBeltRecipe), Item.Get<ConveyorBeltItem>().UILink(), 1, typeof(IndustrySkill), typeof(IndustryFocusedSpeedTalent), typeof(IndustryParallelSpeedTalent));
+            this.LaborInCalories = CreateLaborInCaloriesValue(50);
+            this.CraftMinutes = CreateCraftTimeValue(typeof(ConveyorBeltRecipe), 1, typeof(IndustrySkill), typeof(IndustryFocusedSpeedTalent), typeof(IndustryParallelSpeedTalent));
             this.Initialize(Localizer.DoStr("Conveyor Belt"), typeof(ConveyorBeltRecipe));
+
             CraftingComponent.AddRecipe(typeof(AssemblyLineObject), this);
         }
     }
