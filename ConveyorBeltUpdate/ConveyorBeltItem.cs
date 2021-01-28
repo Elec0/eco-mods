@@ -1,1 +1,49 @@
-../../../Programming Languages/C#/Eco/ConveyorBeltUpdate/ConveyorBeltItem.cs
+namespace Eco.Mods.TechTree
+{
+// [DoNotLocalize]
+using System;
+using System.Collections.Generic;
+using Eco.Gameplay.Components;
+using Eco.Gameplay.Items;
+using Eco.Gameplay.Skills;
+using Eco.Gameplay.Systems.TextLinks;
+using Eco.Gameplay.Systems.Tooltip;
+using Eco.Shared.Localization;
+using Eco.Shared.Serialization;
+
+[Serialized]
+[LocDisplayName("Conveyor Belt")]
+[Weight(0)]
+public partial class ConveyorBeltItem : WorldObjectItem<ConveyorBeltObject>
+{
+    public override LocString DisplayDescription { get { return Localizer.DoStr("Convey things with belts"); } }
+
+    static ConveyorBeltItem() { }
+    }
+
+    [RequiresSkill(typeof(IndustrySkill), 1)]
+    public partial class ConveyorBeltRecipe : RecipeFamily
+    {
+        public ConveyorBeltRecipe()
+        {
+            this.Initialize(Localizer.DoStr("Conveyor Belt"), typeof(ConveyorBeltRecipe));
+            this.Recipes = new List<Recipe>
+            {
+                new Recipe("ConveyorBelt",
+                        Localizer.DoStr("Conveyor Belt"),
+                        new IngredientElement[]
+                        {
+                            new IngredientElement(typeof(IronGearItem), 1, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
+                            new IngredientElement(typeof(CorrugatedSteelItem), 1, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
+                        },
+                        new CraftingElement<ConveyorBeltItem>()
+                        )
+            };
+
+            this.ExperienceOnCraft = 5;
+            this.CraftMinutes = CreateCraftTimeValue(typeof(ConveyorBeltRecipe), Item.Get<ConveyorBeltItem>().UILink(), 1, typeof(IndustrySkill), typeof(IndustryFocusedSpeedTalent), typeof(IndustryParallelSpeedTalent));
+            this.Initialize(Localizer.DoStr("Conveyor Belt"), typeof(ConveyorBeltRecipe));
+            CraftingComponent.AddRecipe(typeof(AssemblyLineObject), this);
+        }
+    }
+}
