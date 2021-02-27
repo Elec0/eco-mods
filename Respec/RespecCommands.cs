@@ -84,8 +84,8 @@ namespace Eco.Mods
                 user.Player.Error(Localizer.Format("Skill {0} not found.", skillName));
                 return;
             }
-			foundSkill.AbandonSpecialty(targetUser.Player);
-            targetUser.Player.Client.RPCAsync<bool>("PopupConfirmBox", targetUser.Player.Client, Localizer.Format("Your {0} skill has been abandoned. Please disconnect and reconnect immediately.", foundSkill.Name));
+			foundSkill.AbandonSpecialty(toSet.Player);
+            toSet.Player.Client.RPCAsync<bool>("PopupConfirmBox", toSet.Player.Client, Localizer.Format("Your {0} skill has been abandonned. Please disconnect and reconnect immediately to resync your skills", foundSkill.Name));
             user.Player.Msg(Localizer.Format("Abandoned skill {0}.", foundSkill.Name));
         }
     }
