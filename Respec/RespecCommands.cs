@@ -64,6 +64,30 @@ namespace Eco.Mods
             toSet.Skillset.AddExperience(foundSkill.Type, skillPoints, Localizer.DoStr("dev command"));
             user.Player.Msg(Localizer.Format("Added {0} to skill {1}.", skillPoints, foundSkill.Name));
         }
+
+        [ChatSubCommand("Skills", "Abandon a given skill for yourself or a given player.", ChatAuthorizationLevel.Admin)]
+        public static void AbandonSkill(User user, string skillName, User targetUser = null)
+        {
+            User toSet = targetUser == null ? user : targetUser;
+
+            Skill foundSkill = null;
+            foreach (Skill s in toSet.Skillset.Skills)
+            {
+                if (!s.IsRoot && s.Name.ToLower().Contains(skillName.ToLower()))
+                {
+                    foundSkill = s;
+                    break;
+                }
+            }
+            if (foundSkill == null || foundSkill.Name.Equals("SelfImprovementSkill"))
+            {
+                user.Player.Error(Localizer.Format("Skill {0} not found.", skillName));
+                return;
+            }
+			foundSkill.AbandonSpecialty(toSet.Player);
+            toSet.Player.Client.RPCAsync<bool>("PopupConfirmBox", toSet.Player.Client, Localizer.Format("Your {0} skill has been abandonned. Please disconnect and reconnect immediately to resync your skills", foundSkill.Name));
+            user.Player.Msg(Localizer.Format("Abandoned skill {0}.", foundSkill.Name));
+        }
     }
 
 }
